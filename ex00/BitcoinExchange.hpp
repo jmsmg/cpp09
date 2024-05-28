@@ -13,20 +13,24 @@
 class	BitcoinExchange
 {
 	private:
-		std::string						_arg;
+		std::ifstream					*_input;
 		std::map<std::string, double>	*_data;
 
 	public:
 		BitcoinExchange();
-		BitcoinExchange(const std::string arg, const std::map<std::string, double> *data);
+		BitcoinExchange(std::ifstream *input, std::map<std::string, double> *data);
 		BitcoinExchange(const BitcoinExchange &obj);
-		BitcoinExchange	&BitcoinExchange::operator=(const BitcoinExchange &obj);
+		BitcoinExchange	&operator=(const BitcoinExchange &obj);
 		~BitcoinExchange();
 
-		std::map<std::string, int> getData();
-		std::map<std::string, int> getInput();
+		std::map<std::string, int> getData(void);
+		std::map<std::string, int> getInput(void);
+
+		void	printLine(std::string line);
+		void	print(void);
+		double	transUnixTime(std::string str);
 };
 
-std::map<std::string, double>	*make_map(std::ifstream	&file, char delemeter);
+std::map<std::string, double>	*makeMap(std::ifstream	&file, char delemeter);
 
 #endif

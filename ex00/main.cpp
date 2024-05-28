@@ -16,11 +16,9 @@ int	main(int argc, char *argv[])
 
 		std::map<std::string, double> *data_map;
 
-		data_map = make_map(data, ',');
-		for (std::map<std::string, double>::iterator it = data_map->begin(); it != data_map->end(); it++)
-		{
-			std::cout << "key : " << it->first << " value : " << it->second << std::endl;
-		}
+		data_map = makeMap(data, ',');
+		BitcoinExchange	bitcoin(&input, data_map);
+		bitcoin.print();
 		// input을 앞, 뒤로 쪼갬
 		// map의 key를 unix time으로 변환해서 다시 원래대로 돌리는 것 고민해야함
 		// 에러처리 -> 2001-42-42
