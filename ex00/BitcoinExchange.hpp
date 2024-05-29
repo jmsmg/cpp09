@@ -26,7 +26,7 @@ class	BitcoinExchange
 		std::map<std::string, int> getData(void);
 		std::map<std::string, int> getInput(void);
 
-		void	printLine(std::string line);
+		void	printLine(std::string line, int num);
 		void	print(void);
 		double	transUnixTime(std::string str);
 };

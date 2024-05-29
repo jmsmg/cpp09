@@ -19,12 +19,6 @@ int	main(int argc, char *argv[])
 		data_map = makeMap(data, ',');
 		BitcoinExchange	bitcoin(&input, data_map);
 		bitcoin.print();
-		// input을 앞, 뒤로 쪼갬
-		// map의 key를 unix time으로 변환해서 다시 원래대로 돌리는 것 고민해야함
-		// 에러처리 -> 2001-42-42
-		// 숫자를 탐색함
-		// 에러처리 -> input value 음수, overflow
-		// value 값 곱함
 
 		delete data_map;
 	}

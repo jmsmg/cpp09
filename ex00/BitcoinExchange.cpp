@@ -29,34 +29,68 @@ BitcoinExchange::~BitcoinExchange()
 {
 }
 
-void	BitcoinExchange::printLine(std::string line)
+void	BitcoinExchange::printLine(std::string line, int num)
 {
-	std::string			buff;
-	std::istringstream	iss(line);
+	std::string								buff;
+	std::string								out;
+	std::string								date;
+	double									value;
+	std::istringstream						iss(line);
+	std::map<std::string, double>::iterator	it;
 
-	while (std::getline(iss, buff, ' '))
+	out.reserve(35);
+	if (std::getline(iss, buff, ' '))
 	{
-		// checkDate();
-		// checkPipe();
-		// chechNumber();
+		it = this->_data->find(buff);
+		if (it != this->_data->end())
+		{
+			out += buff;
+			out += " => ";
+			value = it->second;
+		}
+		// TODO error
 	}
+	if (std::getline(iss, buff, ' '))
+	{
+		if (buff != "|")
+		{
+			std::cerr << "Error: bad input " << line << std::endl;
+			return ;
+		}
+	}
+	if (std::getline(iss, buff, ' '))
+	{
+		if (atof(buff.c_str()) < 0)
+		{
+			std::cerr << "Error: too large a number." << std::endl;
+		}
+		if ((2147483647 < atof(buff.c_str())))
+		{
+			std::cerr << "Error: not a positive number." << std::endl;
+			return ;
+		}
+		out += buff;
+		out += " = ";
+	}
+	std::cout << out << atof(buff.c_str()) * value << std::endl;
 }
 
 void	BitcoinExchange::print(void)
 {
+	int			num = 0;
 	std::string	line;
-	std::string	date;
-	std::string	value;
+
+	std::getline(*(this->_input), line);
+	if (line != "date | value")
+	{
+		std::cerr << "line : " << num + 1 << std::endl;
+		throw (std::invalid_argument("Error: input file error"));
+	}
 
 	while (std::getline(*(this->_input), line))
 	{
-		std::string			buf;
-		std::istringstream	iss(line);
-
-		while (std::getline(iss, buf, ' '))
-		{
-			std::cout << buf << std::endl;
-		}
+		this->printLine(line, num);
+		num++;
 	}
 }
 
