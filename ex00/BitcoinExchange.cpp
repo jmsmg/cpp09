@@ -103,41 +103,49 @@ void	BitcoinExchange::printLine(std::string line)
 	std::map<std::string, double>::iterator	it;
 
 	out.reserve(35);
-	if (std::getline(iss, buff, ' '))
+	try
 	{
-		if (checkDate(buff))
+		if (std::getline(iss, buff, ' '))
 		{
-			std::cout << "Error: bad input => " << line << std::endl;
-			return ;
+			if (checkDate(buff))
+				throw (std::runtime_error("Error: bad input => "));
+			value = this->findDate(buff);
+			out += buff;
+			out += " => ";
 		}
-		value = this->findDate(buff);
-		out += buff;
-		out += " => ";
+		else
+			throw (std::runtime_error("Error: bad input => "));
+		if (std::getline(iss, buff, ' '))
+		{
+			if (buff != "|")
+				throw (std::runtime_error("Error: bad input => "));
+		}
+		else
+			throw (std::runtime_error("Error: bad input => "));
+		if (std::getline(iss, buff, ' '))
+		{
+			if (atof(buff.c_str()) < 0)
+			{
+				std::cerr << "Error: not a positive number." << std::endl;
+				return ;
+			}
+			if ((2147483647 < atof(buff.c_str())))
+			{
+				std::cerr << "Error: too large a number." << std::endl;
+				return ;
+			}
+			out += buff;
+			out += " = ";
+		}
+		else
+			throw (std::runtime_error("Error: bad input => "));
+		std::cout << out << atof(buff.c_str()) * value << std::endl;
 	}
-	if (std::getline(iss, buff, ' '))
+	catch(const std::exception& e)
 	{
-		if (buff != "|")
-		{
-			std::cout << "Error: bad input " << line << std::endl;
-			return ;
-		}
+		std::cerr << e.what() << line << '\n';
 	}
-	if (std::getline(iss, buff, ' '))
-	{
-		if (atof(buff.c_str()) < 0)
-		{
-			std::cerr << "Error: not a positive number." << std::endl;
-			return ;
-		}
-		if ((2147483647 < atof(buff.c_str())))
-		{
-			std::cerr << "Error: too large a number." << std::endl;
-			return ;
-		}
-		out += buff;
-		out += " = ";
-	}
-	std::cout << out << atof(buff.c_str()) * value << std::endl;
+	
 }
 
 void	BitcoinExchange::print(void)
