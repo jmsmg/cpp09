@@ -29,72 +29,7 @@ BitcoinExchange::~BitcoinExchange()
 {
 }
 
-void	BitcoinExchange::printLine(std::string line, int num)
-{
-	std::string								buff;
-	std::string								out;
-	std::string								date;
-	double									value;
-	std::istringstream						iss(line);
-	std::map<std::string, double>::iterator	it;
-
-	out.reserve(35);
-	if (std::getline(iss, buff, ' '))
-	{
-		it = this->_data->find(buff);
-		if (it != this->_data->end())
-		{
-			out += buff;
-			out += " => ";
-			value = it->second;
-		}
-		// TODO error
-	}
-	if (std::getline(iss, buff, ' '))
-	{
-		if (buff != "|")
-		{
-			std::cerr << "Error: bad input " << line << std::endl;
-			return ;
-		}
-	}
-	if (std::getline(iss, buff, ' '))
-	{
-		if (atof(buff.c_str()) < 0)
-		{
-			std::cerr << "Error: too large a number." << std::endl;
-		}
-		if ((2147483647 < atof(buff.c_str())))
-		{
-			std::cerr << "Error: not a positive number." << std::endl;
-			return ;
-		}
-		out += buff;
-		out += " = ";
-	}
-	std::cout << out << atof(buff.c_str()) * value << std::endl;
-}
-
-void	BitcoinExchange::print(void)
-{
-	int			num = 0;
-	std::string	line;
-
-	std::getline(*(this->_input), line);
-	if (line != "date | value")
-	{
-		std::cerr << "line : " << num + 1 << std::endl;
-		throw (std::invalid_argument("Error: input file error"));
-	}
-
-	while (std::getline(*(this->_input), line))
-	{
-		this->printLine(line, num);
-		num++;
-	}
-}
-
-double	BitcoinExchange::transUnixTime(std::string str)
+time_t	BitcoinExchange::transUnixTime(std::string str)
 {
 	time_t		ret = 0;
 	struct tm	*cur;
@@ -113,6 +48,112 @@ double	BitcoinExchange::transUnixTime(std::string str)
 
 	ret = mktime(cur);
 	return (ret);
+}
+
+double	BitcoinExchange::findDate(std::string buff)
+{
+	time_t	input = this->transUnixTime(buff);
+	time_t	curr = 0;
+	time_t	tmp = 0;
+	double	value = 0;
+
+	for (std::map<std::string, double>::iterator it = this->_data->begin(); it != this->_data->end(); it++)
+	{
+		curr = this->transUnixTime(it->first);
+		if (tmp < curr && curr <= input)
+		{
+			tmp = curr;
+			value = it->second;
+		}
+	}
+	return (value);
+}
+
+bool	BitcoinExchange::checkDate(std::string buff)
+{
+	time_t		raw = this->transUnixTime(buff);
+	struct tm	*after = localtime(&raw);
+	std::istringstream is(buff);
+
+	std::getline(is, buff, '-');
+	if (after->tm_year != atof(buff.c_str()))
+	{
+		return (true);
+	}
+	std::getline(is, buff, '-');
+	if (after->tm_mon != atof(buff.c_str()))
+	{
+		return (true);
+	}
+	std::getline(is, buff, '-');
+	if (after->tm_mday != atof(buff.c_str()))
+	{
+		return (true);
+	}
+	return (false);
+}
+
+void	BitcoinExchange::printLine(std::string line)
+{
+	std::string								buff;
+	std::string								out;
+	std::string								date;
+	double									value;
+	std::istringstream						iss(line);
+	std::map<std::string, double>::iterator	it;
+
+	out.reserve(35);
+	if (std::getline(iss, buff, ' '))
+	{
+		if (checkDate(buff))
+		{
+			std::cout << "Error: bad input => " << line << std::endl;
+			return ;
+		}
+		value = this->findDate(buff);
+		out += buff;
+		out += " => ";
+	}
+	if (std::getline(iss, buff, ' '))
+	{
+		if (buff != "|")
+		{
+			std::cout << "Error: bad input " << line << std::endl;
+			return ;
+		}
+	}
+	if (std::getline(iss, buff, ' '))
+	{
+		if (atof(buff.c_str()) < 0)
+		{
+			std::cerr << "Error: not a positive number." << std::endl;
+			return ;
+		}
+		if ((2147483647 < atof(buff.c_str())))
+		{
+			std::cerr << "Error: too large a number." << std::endl;
+			return ;
+		}
+		out += buff;
+		out += " = ";
+	}
+	std::cout << out << atof(buff.c_str()) * value << std::endl;
+}
+
+void	BitcoinExchange::print(void)
+{
+	std::string	line;
+
+	std::getline(*(this->_input), line);
+	if (line != "date | value")
+	{
+		throw (std::invalid_argument("Error: input file error"));
+	}
+
+	while (std::getline(*(this->_input), line))
+	{
+		this->printLine(line);
+	}
 }
 
 std::map<std::string, double>	*makeMap(std::ifstream	&data, char delemeter)

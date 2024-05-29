@@ -26,9 +26,11 @@ class	BitcoinExchange
 		std::map<std::string, int> getData(void);
 		std::map<std::string, int> getInput(void);
 
-		void	printLine(std::string line, int num);
+		time_t	transUnixTime(std::string str);
+		bool	checkDate(std::string buff);
+		double	findDate(std::string buff);
+		void	printLine(std::string line);
 		void	print(void);
-		double	transUnixTime(std::string str);
 };
 
 std::map<std::string, double>	*makeMap(std::ifstream	&file, char delemeter);
