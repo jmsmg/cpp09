@@ -32,7 +32,7 @@ PmergeMe::~PmergeMe()
 
 }
 
-void	PmergeMe::checkInput(int argc, char **argv)
+void	PmergeMe::inputArguments(int argc, char *argv[])
 {
 	long long	tmp = 0;
 
@@ -40,7 +40,7 @@ void	PmergeMe::checkInput(int argc, char **argv)
 	{
 		throw (std::invalid_argument("Error : invalid argument count"));
 	}
-	for (size_t i = 1; i < argc - 1; i++)
+	for (size_t i = 1; i < argc; i++)
 	{
 		for (int j = 0; argv[i][j]; j++)
 		{
@@ -55,5 +55,19 @@ void	PmergeMe::checkInput(int argc, char **argv)
 				throw (std::runtime_error("Error : argument is not intger"));
 			}
 		}
+		this->_deq.push_back(atoi(argv[i]));
+		this->_vec.push_back(atoi(argv[i]));
 	}
+}
+
+template <typename T>
+T	PmergeMe::fordJohnson(T structure, int a, int b, int depth)
+{
+	// if ()
+	// {
+
+	// }
+
+	// https://80000coding.oopy.io/fc425e08-0c24-4c43-9422-bfae68d55cbf#fc425e08-0c24-4c43-9422-bfae68d55cbf
+	// indexing? depth?
 }

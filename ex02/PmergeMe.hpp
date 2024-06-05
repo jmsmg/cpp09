@@ -23,6 +23,8 @@ class PmergeMe
 		PmergeMe	&operator=(const PmergeMe &pmergeme);
 		~PmergeMe();
 
-		void	checkInput(int argc, char **argv);
+		void	inputArguments(int argc, char *argv[]);
+		template <typename T>
+		T	fordJohnson(T structure);
 };
 #endif
