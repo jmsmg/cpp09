@@ -9,14 +9,16 @@ class RPN
 	private:
 		std::stack<int>	_stack;
 
-		void	process(char *input);
 		void	checkInput(char *input);
 		void	calculator(char charactor);
-		
+		int		basicOperation(int first, int second, char oper);
+	
 	public:
-		RPN(/* args */);
+		RPN();
 		RPN(const RPN &rpn);
 		RPN	&operator=(const RPN &rpn);
 		~RPN();
 
+		void	process(char *input);
 };
+#endif

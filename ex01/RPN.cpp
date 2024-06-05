@@ -2,6 +2,7 @@
 
 RPN::RPN() : _stack()
 {
+
 }
 
 RPN::RPN(const RPN &rpn)
@@ -23,13 +24,25 @@ RPN::~RPN()
 
 }
 
-void	RPN::process(char *input)
+int	RPN::basicOperation(int first, int second, char oper)
 {
-	this->checkInput(input);
-	for (int i = 0; input[i]; i++)
+	// std::cout << first << std::endl;
+	// std::cout << second << std::endl;
+	// std::cout << oper << std::endl;
+	// std::cout << std::endl;
+	if (oper == '+')
 	{
-		this->calculator(input[i]);
+		return (first + second);
 	}
+	if (oper == '-')
+	{
+		return (first - second);
+	}
+	if (oper == '/')
+	{
+		return (first / second);
+	}
+	return (first * second);
 }
 
 void	RPN::calculator(char charactor)
@@ -37,24 +50,31 @@ void	RPN::calculator(char charactor)
 	int	first;
 	int	second;
 
-	if (this->_stack.size() <= 2 && !isdigit(charactor))
+	if (this->_stack.size() < 2 && !isdigit(charactor))
 	{
 		throw std::invalid_argument("Error: Invalid Reverse Polish Notation format.");
 	}
-	first = this->_stack.top();
-	this->_stack.pop();
-	second = this->_stack.top();
-	this->_stack.pop();
-
-	// 연산자 구해야함
+	if (isdigit(charactor))
+	{
+		this->_stack.push(charactor - '0');
+	}
+	else
+	{
+		second = this->_stack.top();
+		this->_stack.pop();
+		first = this->_stack.top();
+		this->_stack.pop();
+		this->_stack.push(this->basicOperation(first, second, charactor));
+	}
 }
+
 void	RPN::checkInput(char *input)
 {
 	for (int i = 0; input[i]; i++)
 	{
 		if (i % 2 == 0)
 		{
-			if (!isdigit(input[i]) || input[i] != '+' || input[i] != '-' || input[i] != '*' || input[i] != '/')
+			if (!std::isdigit(input[i]) && input[i] != '+' && input[i] != '-' && input[i] != '*' && input[i] != '/')
 			{
 				throw (std::invalid_argument("Error : Expected a operator."));
 			}
@@ -64,5 +84,15 @@ void	RPN::checkInput(char *input)
 			throw (std::invalid_argument("Error : Expected a space character."));
 		}
 	}
-	// 스택에 넣어햐함
+}
+
+void	RPN::process(char *input)
+{
+	this->checkInput(input);
+	for (int i = 0; input[i]; i++)
+	{
+		if (i % 2 == 0)
+			this->calculator(input[i]);
+	}
+	std::cout << this->_stack.top() << std::endl;
 }
