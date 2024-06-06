@@ -25,7 +25,15 @@ class PmergeMe
 
 		void	inputArguments(int argc, char *argv[]);
 		template <typename T>
-		void	fordJohnson(T &array, int a, int b, int square);
-		int		PmergeMe::jacobsthal(int n)
+		void	fordJohnson(T &array, int depth, int node_size);
+		int		jacobsthal(int n);
+
+		size_t				getN();
+		std::vector<int>	getVec();
+		std::deque<int>		getDeq();
+
+		void				setN(size_t n);
+		void				setVec(std::vector<int> &vec);
+		void				setDeq(std::deque<int> &deq);
 };
 #endif

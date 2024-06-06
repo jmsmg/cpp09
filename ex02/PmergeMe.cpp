@@ -61,20 +61,54 @@ void	PmergeMe::inputArguments(int argc, char *argv[])
 }
 
 template <typename T>
-void	PmergeMe::fordJohnson(T &array, int a, int b, int square)
+void	PmergeMe::fordJohnson(T &array, int depth, int node_size)
 {
-	if (2 ** square < this->_n)
+	if (array.size() == 0 || array.size() == 1) // 에러처리
 	{
-		
+		throw (std::runtime_error("Error : invalid array size"));
 	}
-	while (a)
+	if (n < node_size * 4)
 	{
+		return ;
+	}
+	// insert 하는 부분
 
-	}
-	fordJohnson(T &array, a, b, square + 1);
+	fordJohnson(T &array, depth + 1, node_size * 2);
+
+	// 이후에 각 depth 3, 2, 1로 올라가며 정렬 진행?
 }
 
 int	PmergeMe::jacobsthal(int n)
 {
 	return ((pow(2, n) - pow(-1, n)) / 3);
+}
+
+size_t	PmergeMe::getN()
+{
+	return (this->_n);	
+}
+
+std::vector<int>	PmergeMe::getVec()
+{
+	return (this->_vec);
+}
+
+std::deque<int>		PmergeMe::getDeq()
+{
+	return (this->_deq);
+}
+
+void	PmergeMe::setN(size_t n)
+{
+	this->_n = n;
+}
+
+void	PmergeMe::setVec(std::vector<int> &vec)
+{
+	this->_vec = vec;
+}
+
+void	PmergeMe::setDeq(std::deque<int> &deq)
+{
+	this->_deq = deq;
 }
