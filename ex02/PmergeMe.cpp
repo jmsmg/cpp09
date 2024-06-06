@@ -61,13 +61,20 @@ void	PmergeMe::inputArguments(int argc, char *argv[])
 }
 
 template <typename T>
-T	PmergeMe::fordJohnson(T structure, int a, int b, int depth)
+void	PmergeMe::fordJohnson(T &array, int a, int b, int square)
 {
-	// if ()
-	// {
+	if (2 ** square < this->_n)
+	{
+		
+	}
+	while (a)
+	{
 
-	// }
+	}
+	fordJohnson(T &array, a, b, square + 1);
+}
 
-	// https://80000coding.oopy.io/fc425e08-0c24-4c43-9422-bfae68d55cbf#fc425e08-0c24-4c43-9422-bfae68d55cbf
-	// indexing? depth?
+int	PmergeMe::jacobsthal(int n)
+{
+	return ((pow(2, n) - pow(-1, n)) / 3);
 }

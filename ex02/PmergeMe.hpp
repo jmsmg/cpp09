@@ -8,7 +8,7 @@
 #include <climits>
 #include <deque>
 #include <utility>
-
+#include <cmath>
 class PmergeMe
 {
 	private:
@@ -25,6 +25,7 @@ class PmergeMe
 
 		void	inputArguments(int argc, char *argv[]);
 		template <typename T>
-		T	fordJohnson(T structure);
+		void	fordJohnson(T &array, int a, int b, int square);
+		int		PmergeMe::jacobsthal(int n)
 };
 #endif
