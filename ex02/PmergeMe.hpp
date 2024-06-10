@@ -9,12 +9,13 @@
 #include <deque>
 #include <utility>
 #include <cmath>
+
+template <typename T>
 class PmergeMe
 {
 	private:
 		size_t				_n;
-		std::vector<int>	_vec;
-		std::deque<int>		_deq;
+		T					_array;
 
 	public:
 		PmergeMe();
@@ -24,16 +25,14 @@ class PmergeMe
 		~PmergeMe();
 
 		void	inputArguments(int argc, char *argv[]);
-		template <typename T>
-		void	fordJohnson(T &array, int depth, int node_size);
+		void	fordJohnson(T &array, int depth, int fair_size);
+		void	mergeArray(T &array, int fair_size);
 		int		jacobsthal(int n);
 
 		size_t				getN();
-		std::vector<int>	getVec();
-		std::deque<int>		getDeq();
+		T					&getArray();
 
 		void				setN(size_t n);
-		void				setVec(std::vector<int> &vec);
-		void				setDeq(std::deque<int> &deq);
+		void				setArray(T array);
 };
 #endif
