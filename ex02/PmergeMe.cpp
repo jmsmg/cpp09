@@ -67,11 +67,28 @@ void	PmergeMe::fordJohnson(T &array, int depth, int node_size)
 	{
 		throw (std::runtime_error("Error : invalid array size"));
 	}
-	if (n < node_size * 4)
+
+	int i = 0;
+	while (node_size * (i + 1) < this->_n)
 	{
+		T::iterator a = T.begin() + i * node_size;
+		T::iterator b = a + (node_size / 2);
+		T::iterator last = b + (node_size / 2);
+		if (*a < *b)
+			T.rotate(a, b, last);
+		i++;
+	}
+
+	if (n < node_size * 4) // 탈출
+	{
+		// index error?
+		T::iterator a = T.begin();
+		T::iterator b = a + (node_size / 2);
+		T::iterator last = b + (node_size / 2);
+
+		T.rotate(a, b, last);
 		return ;
 	}
-	// insert 하는 부분
 
 	fordJohnson(T &array, depth + 1, node_size * 2);
 
