@@ -129,7 +129,7 @@ void	BitcoinExchange::printLine(std::string line)
 				std::cerr << "Error: not a positive number." << std::endl;
 				return ;
 			}
-			if ((2147483647 < atof(buff.c_str())))
+			if (1000 < atof(buff.c_str()))
 			{
 				std::cerr << "Error: too large a number." << std::endl;
 				return ;
