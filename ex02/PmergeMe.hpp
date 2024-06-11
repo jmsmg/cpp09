@@ -16,8 +16,11 @@ template <typename T>
 class PmergeMe
 {
 	private:
-		size_t				_n;
-		T					_array;
+		size_t							_n;
+		T								_array;
+		std::vector<int>				_remain;
+		std::vector<std::vector<int> >	_a;
+		std::vector<std::vector<int> >	_b;
 
 	public:
 		PmergeMe() : _n(0), _array()
@@ -76,62 +79,72 @@ class PmergeMe
 			this->_n = this->_array.size();
 		};
 
-		void	binarySearch(int a, int	b)
+		void	makeArray(int fair_size)
 		{
-			int	left = 0;
-			int	right = std::find(this->_array.begin(), this->_array.end(), a);
+			std::vector<std::vector<int> >		a;
+			std::vector<std::vector<int> >		b;
+			std::vector<int>					remain;
 
-			while ()
-			{
-
-			}
-		}
-
-		void	mergeArray(int fair_size)
-		{
-			T		a;
-			T		b;
-			int		remain;
+			int		r_size;
+			int		j;
 			size_t	i = 0;
 
-			remain = this->_n % fair_size;
+			r_size = this->_n % fair_size;
 			while (i + fair_size < this->_n)
 			{
-				a.push_back(this->_array[i]);
-				b.push_back(this->_array[i + (fair_size / 2)]);
+				j = 0;
+				std::vector<int>	tmp;
+				while (j < fair_size / 2)
+				{
+					tmp.push_back(this->_array[i + j]);
+					j++;
+				}
+				a.push_back(tmp);
+				j = 0;
+				std::vector<int>	tmpb;
+				while (j < fair_size / 2)
+				{
+					tmpb.push_back(this->_array[i + j + (fair_size / 2)]);
+					j++;
+				}
+				b.push_back(tmpb);
 				i += fair_size;
 			}
-			if (remain && fair_size / 2 <= remain) // 딱 떨어지지 않고, B2가 생성되어야 할 때
+			if (r_size && fair_size / 2 <= r_size) // 딱 떨어지지 않고, B2가 생성되어야 할 때
 			{
-				b.push_back(this->_array[i]);
+				std::vector<int>	tmp;
+				j = 0;
+				while (j < fair_size / 2)
+				{
+					std::vector<int>	tmp;
+					tmp.push_back(this->_array[i + j]);
+					j++;
+				}
+				b.push_back(tmp);
+				while (i + j < this->_n)
+				{
+					remain.push_back(this->_array[i + j]);
+					j++;
+				}
 			}
-			std::cout << "변형 전 a : ";
-			for (typename T::iterator a_it = a.begin(); a_it != a.end(); a_it++)
+			this->_a = a;
+			this->_b = b;
+			this->_remain = remain;
+			for (std::vector<std::vector<int> >::iterator it = b.begin(); it != b.end(); it++)
 			{
-				std::cout << *a_it << " ";
+				for (std::vector<int>::iterator iter = it->begin(); iter != it->end(); iter++)
+				{
+					std::cout << *iter << " ";
+				}
+				std::cout << std::endl;
 			}
-			std::cout << "변형 전 b : ";
-			for (typename T::iterator b_it = b.begin(); b_it != b.end(); b_it++)
-			{
-				std::cout << *b_it << " ";
-			}
-			std::cout << std::endl;
-			std::cout << std::endl;
-			// a,b 순서 정하기
-			T	tmp;
-			int i = 0;
-			for (typename T::iterator b_it = b.begin(); b_it != b.end(); b_it++)
-			{
-				binarySearch(a.begin() + i, *b_it);
-				i++;
-			}
-			// std::cout << "여기 합친거 : ";
-			// for (typename T::iterator a_it = a.begin(); a_it != a.end(); a_it++)
-			// {
-			// 	std::cout << *a_it << " ";
-			// }
-			std::cout << std::endl;
 		}
+
+		// void	mergeArray(int fair_size)
+		// {
+
+		// }
+
 
 		void	fordJohnson(int depth, int fair_size)
 		{
@@ -154,13 +167,13 @@ class PmergeMe
 			if (idx == 1) // 탈출
 			{
 				std::cout << "fair " << fair_size << std::endl;
-				this->mergeArray(fair_size);
+				this->makeArray(fair_size);
 				return ;
 			}
 
 			fordJohnson(depth + 1, fair_size * 2);
 			std::cout << "fair " << fair_size << std::endl;
-			mergeArray(fair_size);
+			makeArray(fair_size);
 			// 이후에 각 depth 3, 2, 1로 올라가며 정렬 진행?
 			// 값으로 찾기
 		};
