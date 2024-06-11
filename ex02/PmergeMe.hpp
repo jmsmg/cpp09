@@ -76,6 +76,17 @@ class PmergeMe
 			this->_n = this->_array.size();
 		};
 
+		void	binarySearch(int a, int	b)
+		{
+			int	left = 0;
+			int	right = std::find(this->_array.begin(), this->_array.end(), a);
+
+			while ()
+			{
+
+			}
+		}
+
 		void	mergeArray(int fair_size)
 		{
 			T		a;
@@ -94,17 +105,31 @@ class PmergeMe
 			{
 				b.push_back(this->_array[i]);
 			}
-			std::cout << "a : ";
-			for (typename T::iterator it = a.begin(); it != a.end(); it++)
+			std::cout << "변형 전 a : ";
+			for (typename T::iterator a_it = a.begin(); a_it != a.end(); a_it++)
 			{
-				std::cout << *it << " ";
+				std::cout << *a_it << " ";
+			}
+			std::cout << "변형 전 b : ";
+			for (typename T::iterator b_it = b.begin(); b_it != b.end(); b_it++)
+			{
+				std::cout << *b_it << " ";
 			}
 			std::cout << std::endl;
-			std::cout << "b : ";
-			for (typename T::iterator it = b.begin(); it != b.end(); it++)
+			std::cout << std::endl;
+			// a,b 순서 정하기
+			T	tmp;
+			int i = 0;
+			for (typename T::iterator b_it = b.begin(); b_it != b.end(); b_it++)
 			{
-				std::cout << *it << " ";
+				binarySearch(a.begin() + i, *b_it);
+				i++;
 			}
+			// std::cout << "여기 합친거 : ";
+			// for (typename T::iterator a_it = a.begin(); a_it != a.end(); a_it++)
+			// {
+			// 	std::cout << *a_it << " ";
+			// }
 			std::cout << std::endl;
 		}
 
@@ -128,11 +153,13 @@ class PmergeMe
 
 			if (idx == 1) // 탈출
 			{
+				std::cout << "fair " << fair_size << std::endl;
 				this->mergeArray(fair_size);
 				return ;
 			}
 
 			fordJohnson(depth + 1, fair_size * 2);
+			std::cout << "fair " << fair_size << std::endl;
 			mergeArray(fair_size);
 			// 이후에 각 depth 3, 2, 1로 올라가며 정렬 진행?
 			// 값으로 찾기
