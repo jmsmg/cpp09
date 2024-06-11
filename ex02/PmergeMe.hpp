@@ -76,6 +76,38 @@ class PmergeMe
 			this->_n = this->_array.size();
 		};
 
+		void	mergeArray(int fair_size)
+		{
+			T		a;
+			T		b;
+			int		remain;
+			size_t	i = 0;
+
+			remain = this->_n % fair_size;
+			while (i + fair_size < this->_n)
+			{
+				a.push_back(this->_array[i]);
+				b.push_back(this->_array[i + (fair_size / 2)]);
+				i += fair_size;
+			}
+			if (remain && fair_size / 2 <= remain) // 딱 떨어지지 않고, B2가 생성되어야 할 때
+			{
+				b.push_back(this->_array[i]);
+			}
+			std::cout << "a : ";
+			for (typename T::iterator it = a.begin(); it != a.end(); it++)
+			{
+				std::cout << *it << " ";
+			}
+			std::cout << std::endl;
+			std::cout << "b : ";
+			for (typename T::iterator it = b.begin(); it != b.end(); it++)
+			{
+				std::cout << *it << " ";
+			}
+			std::cout << std::endl;
+		}
+
 		void	fordJohnson(int depth, int fair_size)
 		{
 			if (this->_array.size() == 0 || this->_array.size() == 1) // 에러처리
@@ -95,14 +127,17 @@ class PmergeMe
 			}
 
 			if (idx == 1) // 탈출
+			{
+				this->mergeArray(fair_size);
 				return ;
+			}
 
 			fordJohnson(depth + 1, fair_size * 2);
-			// this->mergeArray();
+			mergeArray(fair_size);
 			// 이후에 각 depth 3, 2, 1로 올라가며 정렬 진행?
 			// 값으로 찾기
 		};
-		// void	mergeArray(T &array, int fair_size);
+
 		int		jacobsthal(int n)
 		{
 			return ((pow(2, n) - pow(-1, n)) / 3);
