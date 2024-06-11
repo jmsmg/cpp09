@@ -11,7 +11,11 @@ int	main(int argc, char *argv[])
 		PmergeMe<std::vector<int> > a;
 
 		a.inputArguments(argc, argv);
-		// a.fordJohnson(array, 1, 2);
+		a.fordJohnson(1, 2);
+		for (std::vector<int>::iterator it = a.getArray().begin(); it != a.getArray().end(); it++)
+		{
+			std::cout << *it << std::endl;
+		}
 	}
 	catch(const std::exception& e)
 	{

@@ -73,11 +73,12 @@ class PmergeMe
 				if (tmp.size() != this->_array.size())
 					throw (std::runtime_error("Error : duplicate number"));
 			}
+			this->_n = this->_array.size();
 		};
 
-		void	fordJohnson(T &array, int depth, int fair_size)
+		void	fordJohnson(int depth, int fair_size)
 		{
-			if (array.size() == 0 || array.size() == 1) // 에러처리
+			if (this->_array.size() == 0 || this->_array.size() == 1) // 에러처리
 			{
 				throw (std::runtime_error("Error : invalid array size"));
 			}
@@ -85,7 +86,7 @@ class PmergeMe
 			size_t idx = 0;
 			while (fair_size * (idx + 1) < this->_n)
 			{
-				typename T::iterator a = array.begin() + idx * fair_size;
+				typename T::iterator a = this->_array.begin() + idx * fair_size;
 				typename T::iterator b = a + (fair_size / 2);
 				typename T::iterator last = b + (fair_size / 2);
 				if (*a < *b)
@@ -94,12 +95,9 @@ class PmergeMe
 			}
 
 			if (idx == 1) // 탈출
-			{
-				this->_array = array;
 				return ;
-			}
 
-			fordJohnson(array, depth + 1, fair_size * 2);
+			fordJohnson(depth + 1, fair_size * 2);
 			// this->mergeArray();
 			// 이후에 각 depth 3, 2, 1로 올라가며 정렬 진행?
 			// 값으로 찾기
@@ -110,10 +108,17 @@ class PmergeMe
 			return ((pow(2, n) - pow(-1, n)) / 3);
 		};
 
-		// size_t				getN();
-		// T					&getArray();
+		size_t				getN()
+		{
+			return (this->_n);
+		};
 
-		// void				setN(size_t n);
-		// void				setArray(T array);
+		T					&getArray()
+		{
+			return (this->_array);
+		};
+
+		void				setN(size_t n);
+		void				setArray(T array);
 };
 #endif
