@@ -112,17 +112,16 @@ class PmergeMe
 					this->_array.push_back(tmp[k][t]);
 				}
 			}
+			this->_a.clear();
+			this->_b.clear();
+			this->_remain.clear();
 		}
 
-		void	makeArray(int fair_size)
+		void	makeArray(size_t fair_size)
 		{
-			std::vector<T>		a;
-			std::vector<T>		b;
-			T					remain;
-
-			int		r_size;
-			int		j;
-			size_t	i = 0;
+			size_t		r_size;
+			size_t		j;
+			size_t		i = 0;
 
 			r_size = this->_n % fair_size;
 			while (i + fair_size < this->_n)
@@ -134,7 +133,7 @@ class PmergeMe
 					tmp.push_back(this->_array[i + j]);
 					j++;
 				}
-				a.push_back(tmp);
+				this->_a.push_back(tmp);
 				j = 0;
 				T	tmpb;
 				while (j < fair_size / 2)
@@ -142,7 +141,7 @@ class PmergeMe
 					tmpb.push_back(this->_array[i + j + (fair_size / 2)]);
 					j++;
 				}
-				b.push_back(tmpb);
+				this->_b.push_back(tmpb);
 				i += fair_size;
 			}
 			if (r_size)
@@ -154,20 +153,16 @@ class PmergeMe
 					tmp.push_back(this->_array[i + j]);
 					j++;
 				}
-				b.push_back(tmp);
+				this->_b.push_back(tmp);
 				while (i + j < this->_n)
 				{
-					remain.push_back(this->_array[i + j]);
+					this->_remain.push_back(this->_array[i + j]);
 					j++;
 				}
 			}
-			this->_a = a;
-			this->_b = b;
-			this->_remain = remain;
-
 		}
 
-		void	fordJohnson(int depth, int fair_size)
+		void	fordJohnson(int depth, size_t fair_size)
 		{
 			if (this->_array.size() == 0 || this->_array.size() == 1) // 에러처리
 			{
@@ -175,7 +170,7 @@ class PmergeMe
 			}
 
 			size_t idx = 0;
-			while (fair_size * (idx + 1) < this->_n)
+			while (fair_size * (idx + 1) <= this->_n)
 			{
 				typename T::iterator a = this->_array.begin() + idx * fair_size;
 				typename T::iterator b = a + (fair_size / 2);
@@ -184,8 +179,7 @@ class PmergeMe
 					std::rotate(a, b, last);
 				idx++;
 			}
-
-			if (idx == 1) // 탈출
+			if (this->_n / 2 <= fair_size) // 탈출
 			{
 				this->makeArray(fair_size);
 				mergeArray();
