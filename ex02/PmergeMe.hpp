@@ -93,16 +93,18 @@ class PmergeMe
 				jacob_idx = jacobsthal(i);
 				while (jacobsthal(i - 1) < jacob_idx)
 				{
+					std::cout << jacob_idx << std::endl;
 					if (this->_b.size() < jacob_idx)
 					{
 						jacob_idx = this->_b.size();
 						flag = 0;
 					}
-					putArray(tmp, jacob_idx - 1);
+					// putArray(tmp, jacob_idx - 1);
 					jacob_idx--;
 				}
 				i++;
 			}
+			std::cout << std::endl;
 
 			this->_array.clear();
 			for (size_t k = 0; k < tmp.size(); k++)

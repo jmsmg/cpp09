@@ -12,11 +12,11 @@ int	main(int argc, char *argv[])
 
 		a.inputArguments(argc, argv);
 		a.fordJohnson(1, 2);
-		for (size_t i = 0; i < a.getArray().size(); i++)
-		{
-			std::cout << a.getArray()[i] << " ";
-		}
-		std::cout << std::endl;
+		// for (size_t i = 0; i < a.getArray().size(); i++)
+		// {
+		// 	std::cout << a.getArray()[i] << " ";
+		// }
+		// std::cout << std::endl;
 	}
 	catch(const std::exception& e)
 	{
