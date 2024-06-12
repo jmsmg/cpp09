@@ -67,7 +67,6 @@ class PmergeMe
 					}
 					else if (INT_MAX < atoll(argv[i]))
 					{
-						std::cout << argv[i] << std::endl;
 						throw (std::runtime_error("Error : argument is not intger"));
 					}
 				}
@@ -79,6 +78,10 @@ class PmergeMe
 			this->_n = this->_array.size();
 		};
 
+		void	makeAvector(int fai)
+		{
+			
+		}
 		void	makeArray(int fair_size)
 		{
 			std::vector<std::vector<int> >		a;
@@ -94,56 +97,55 @@ class PmergeMe
 			{
 				j = 0;
 				std::vector<int>	tmp;
+				std::cout << "a : ";
 				while (j < fair_size / 2)
 				{
 					tmp.push_back(this->_array[i + j]);
+					std::cout << this->_array[i + j] << " "; 
 					j++;
 				}
+				std::cout << std::endl;
 				a.push_back(tmp);
 				j = 0;
 				std::vector<int>	tmpb;
+				std::cout << "b : ";
 				while (j < fair_size / 2)
 				{
 					tmpb.push_back(this->_array[i + j + (fair_size / 2)]);
+					std::cout << this->_array[i + j + (fair_size / 2)] << " ";
 					j++;
 				}
+				std::cout << std::endl;
 				b.push_back(tmpb);
 				i += fair_size;
 			}
 			if (r_size && fair_size / 2 <= r_size) // 딱 떨어지지 않고, B2가 생성되어야 할 때
 			{
+				std::cout << "b2 : ";
 				std::vector<int>	tmp;
 				j = 0;
 				while (j < fair_size / 2)
 				{
-					std::vector<int>	tmp;
 					tmp.push_back(this->_array[i + j]);
+					std::cout  << this->_array[i + j] << " ";
 					j++;
 				}
 				b.push_back(tmp);
+				std::cout << std::endl;
+				std::cout << "remain : ";
 				while (i + j < this->_n)
 				{
 					remain.push_back(this->_array[i + j]);
+					std::cout  << this->_array[i + j] << " ";
 					j++;
-				}
-			}
-			this->_a = a;
-			this->_b = b;
-			this->_remain = remain;
-			for (std::vector<std::vector<int> >::iterator it = b.begin(); it != b.end(); it++)
-			{
-				for (std::vector<int>::iterator iter = it->begin(); iter != it->end(); iter++)
-				{
-					std::cout << *iter << " ";
 				}
 				std::cout << std::endl;
 			}
+
+		void	mergeArray(int fair_size)
+		{
+			
 		}
-
-		// void	mergeArray(int fair_size)
-		// {
-
-		// }
 
 
 		void	fordJohnson(int depth, int fair_size)
