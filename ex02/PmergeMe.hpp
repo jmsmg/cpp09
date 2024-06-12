@@ -19,22 +19,23 @@ class PmergeMe
 		size_t							_n;
 		T								_array;
 		std::vector<int>				_remain;
-		std::vector<std::vector<int> >	_a;
-		std::vector<std::vector<int> >	_b;
+		std::vector<T>	_a;
+		std::vector<T>	_b;
 
 	public:
 		PmergeMe() : _n(0), _array()
 		{
-		};
-		
+		}
+
 		PmergeMe(size_t n) : _n(n), _array()
 		{
-		};
-		
+		}
+
 		PmergeMe(const PmergeMe &pmergeme)
 		{
 			*this = pmergeme;
-		};
+		}
+
 		PmergeMe	&operator=(const PmergeMe &pmergeme)
 		{
 			if (this != &pmergeme)
@@ -43,15 +44,162 @@ class PmergeMe
 				this->_array = pmergeme._array;
 			}
 			return (*this);
-		};
+		}
+
 		~PmergeMe()
 		{
-		};
+			
+		}
+
+		size_t	jacobsthal(int n)
+		{
+			return ((pow(2, n) - pow(-1, n)) / 3);
+		}
+
+		void	putArray(std::vector<T> &tmp, size_t idx)
+		{
+			int									first = 0;
+			int									mid = 0;
+			int									end;
+			typename std::vector<T>::iterator	it;
+
+			
+			it = std::find(tmp.begin(), tmp.end(), this->_a[idx]);
+			end = std::distance(tmp.begin(), it);
+			while (first < end)
+			{
+				int mid = first + (end - first) / 2;
+
+				if (tmp[mid][0] < this->_b[idx][0])
+					first = mid + 1;
+				else if (this->_b[idx][0] < tmp[mid][0])
+					end = mid - 1;
+			}
+			tmp.insert(tmp.begin() + mid, this->_b[idx]);
+		}
+
+		void	mergeArray(void)
+		{
+			int				i = 0;
+			size_t			jacob_idx;
+			size_t			j = 0;;
+			std::vector<T>	tmp;
+
+			tmp = this->_a;
+			while (true)
+			{
+				jacob_idx = jacobsthal(i);
+				while (jacobsthal(i - 1) < jacob_idx)
+				{
+					// 1, 3, 2로 가는데, 사이즈가 2일때 문제됨
+					putArray(tmp, jacob_idx - 1);
+					if (j == this->_b.size())
+					{
+						this->_array.clear();
+						for (size_t k = 0; k < tmp.size(); k++)
+						{
+							for (size_t t = 0; t < tmp[k].size(); t++)
+							{
+								this->_array.push_back(tmp[k][t]);
+							}
+						}
+						// array에 tmp 넣기
+						return ;
+					}
+					j++;
+					jacob_idx--;
+				}
+				i++;
+			}
+		}
+
+		void	makeArray(int fair_size)
+		{
+			std::vector<T>		a;
+			std::vector<T>		b;
+			T					remain;
+
+			int		r_size;
+			int		j;
+			size_t	i = 0;
+
+			r_size = this->_n % fair_size;
+			while (i + fair_size < this->_n)
+			{
+				j = 0;
+				T	tmp;
+				while (j < fair_size / 2)
+				{
+					tmp.push_back(this->_array[i + j]);
+					j++;
+				}
+				a.push_back(tmp);
+				j = 0;
+				T	tmpb;
+				while (j < fair_size / 2)
+				{
+					tmpb.push_back(this->_array[i + j + (fair_size / 2)]);
+					j++;
+				}
+				b.push_back(tmpb);
+				i += fair_size;
+			}
+			if (r_size)
+			{
+				T	tmp;
+				j = 0;
+				while (j < fair_size / 2 && fair_size / 2 <= r_size)
+				{
+					tmp.push_back(this->_array[i + j]);
+					j++;
+				}
+				b.push_back(tmp);
+				while (i + j < this->_n)
+				{
+					remain.push_back(this->_array[i + j]);
+					j++;
+				}
+			}
+			this->_a = a;
+			this->_b = b;
+			this->_remain = remain;
+
+		}
+
+		void	fordJohnson(int depth, int fair_size)
+		{
+			if (this->_array.size() == 0 || this->_array.size() == 1) // 에러처리
+			{
+				throw (std::runtime_error("Error : invalid array size"));
+			}
+
+			size_t idx = 0;
+			while (fair_size * (idx + 1) < this->_n)
+			{
+				typename T::iterator a = this->_array.begin() + idx * fair_size;
+				typename T::iterator b = a + (fair_size / 2);
+				typename T::iterator last = b + (fair_size / 2);
+				if (*a < *b)
+					std::rotate(a, b, last);
+				idx++;
+			}
+
+			if (idx == 1) // 탈출
+			{
+				this->makeArray(fair_size);
+				mergeArray();
+				return ;
+			}
+
+			fordJohnson(depth + 1, fair_size * 2);
+			makeArray(fair_size);
+			mergeArray();
+		}
 
 		void	inputArguments(int argc, char *argv[])
 		{
 			std::set<int>		tmp;
-			std::vector<int>	vec;
+
 			if (argc < 2)
 			{
 				throw (std::invalid_argument("Error : invalid argument count"));
@@ -76,124 +224,16 @@ class PmergeMe
 					throw (std::runtime_error("Error : duplicate number"));
 			}
 			this->_n = this->_array.size();
-		};
-
-		void	makeAvector(int fai)
-		{
-			
 		}
-		void	makeArray(int fair_size)
-		{
-			std::vector<std::vector<int> >		a;
-			std::vector<std::vector<int> >		b;
-			std::vector<int>					remain;
-
-			int		r_size;
-			int		j;
-			size_t	i = 0;
-
-			r_size = this->_n % fair_size;
-			while (i + fair_size < this->_n)
-			{
-				j = 0;
-				std::vector<int>	tmp;
-				std::cout << "a : ";
-				while (j < fair_size / 2)
-				{
-					tmp.push_back(this->_array[i + j]);
-					std::cout << this->_array[i + j] << " "; 
-					j++;
-				}
-				std::cout << std::endl;
-				a.push_back(tmp);
-				j = 0;
-				std::vector<int>	tmpb;
-				std::cout << "b : ";
-				while (j < fair_size / 2)
-				{
-					tmpb.push_back(this->_array[i + j + (fair_size / 2)]);
-					std::cout << this->_array[i + j + (fair_size / 2)] << " ";
-					j++;
-				}
-				std::cout << std::endl;
-				b.push_back(tmpb);
-				i += fair_size;
-			}
-			if (r_size && fair_size / 2 <= r_size) // 딱 떨어지지 않고, B2가 생성되어야 할 때
-			{
-				std::cout << "b2 : ";
-				std::vector<int>	tmp;
-				j = 0;
-				while (j < fair_size / 2)
-				{
-					tmp.push_back(this->_array[i + j]);
-					std::cout  << this->_array[i + j] << " ";
-					j++;
-				}
-				b.push_back(tmp);
-				std::cout << std::endl;
-				std::cout << "remain : ";
-				while (i + j < this->_n)
-				{
-					remain.push_back(this->_array[i + j]);
-					std::cout  << this->_array[i + j] << " ";
-					j++;
-				}
-				std::cout << std::endl;
-			}
-
-		void	mergeArray(int fair_size)
-		{
-			
-		}
-
-
-		void	fordJohnson(int depth, int fair_size)
-		{
-			if (this->_array.size() == 0 || this->_array.size() == 1) // 에러처리
-			{
-				throw (std::runtime_error("Error : invalid array size"));
-			}
-
-			size_t idx = 0;
-			while (fair_size * (idx + 1) < this->_n)
-			{
-				typename T::iterator a = this->_array.begin() + idx * fair_size;
-				typename T::iterator b = a + (fair_size / 2);
-				typename T::iterator last = b + (fair_size / 2);
-				if (*a < *b)
-					std::rotate(a, b, last);
-				idx++;
-			}
-
-			if (idx == 1) // 탈출
-			{
-				std::cout << "fair " << fair_size << std::endl;
-				this->makeArray(fair_size);
-				return ;
-			}
-
-			fordJohnson(depth + 1, fair_size * 2);
-			std::cout << "fair " << fair_size << std::endl;
-			makeArray(fair_size);
-			// 이후에 각 depth 3, 2, 1로 올라가며 정렬 진행?
-			// 값으로 찾기
-		};
-
-		int		jacobsthal(int n)
-		{
-			return ((pow(2, n) - pow(-1, n)) / 3);
-		};
 
 		size_t				getN()
 		{
 			return (this->_n);
-		};
-
+		}
 		T					&getArray()
 		{
 			return (this->_array);
-		};
+		}
 
 		void				setN(size_t n);
 		void				setArray(T array);
