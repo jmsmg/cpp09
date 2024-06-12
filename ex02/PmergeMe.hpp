@@ -59,7 +59,6 @@ class PmergeMe
 		void	putArray(std::vector<T> &tmp, size_t idx)
 		{
 			int									first = 0;
-			int									mid = 0;
 			int									end;
 			typename std::vector<T>::iterator	it;
 
@@ -74,42 +73,44 @@ class PmergeMe
 					first = mid + 1;
 				else if (this->_b[idx][0] < tmp[mid][0])
 					end = mid - 1;
+				else
+					break ; // insert return;
 			}
-			tmp.insert(tmp.begin() + mid, this->_b[idx]);
+			first = (this->_b[idx] <= tmp[first] ? first : first + 1);
+			tmp.insert(tmp.begin() + first, this->_b[idx]);
 		}
 
 		void	mergeArray(void)
 		{
 			int				i = 0;
+			int				flag = 1;
 			size_t			jacob_idx;
-			size_t			j = 0;;
 			std::vector<T>	tmp;
 
 			tmp = this->_a;
-			while (true)
+			while (flag)
 			{
 				jacob_idx = jacobsthal(i);
 				while (jacobsthal(i - 1) < jacob_idx)
 				{
-					// 1, 3, 2로 가는데, 사이즈가 2일때 문제됨
-					putArray(tmp, jacob_idx - 1);
-					if (j == this->_b.size())
+					if (this->_b.size() < jacob_idx)
 					{
-						this->_array.clear();
-						for (size_t k = 0; k < tmp.size(); k++)
-						{
-							for (size_t t = 0; t < tmp[k].size(); t++)
-							{
-								this->_array.push_back(tmp[k][t]);
-							}
-						}
-						// array에 tmp 넣기
-						return ;
+						jacob_idx = this->_b.size();
+						flag = 0;
 					}
-					j++;
+					putArray(tmp, jacob_idx - 1);
 					jacob_idx--;
 				}
 				i++;
+			}
+
+			this->_array.clear();
+			for (size_t k = 0; k < tmp.size(); k++)
+			{
+				for (size_t t = 0; t < tmp[k].size(); t++)
+				{
+					this->_array.push_back(tmp[k][t]);
+				}
 			}
 		}
 
