@@ -1,0 +1,13 @@
+start array : 4 3 2 1 5 
+Jacobsthal array : 1 
+tmp 1: 4 3 
+tmp 2: 4 3 
+Jacobsthal 2 : 1 1
+left : 0 right : -1 mid : 0
+
+Merged array : 2 1 4 3 
+Sorted array : 2 1 4 3 5 
+Jacobsthal array : 1 
+tmp 1: 2 4 
+tmp 2: 2 4 
+Jacobsthal 2 : 1 3
