@@ -19,6 +19,7 @@ class PmergeMe
 		size_t							_n;
 		T								_array;
 		std::vector<int>				_remain;
+		std::vector<int>				_jacobs;
 		std::vector<T>					_a;
 		std::vector<T>					_b;
 
@@ -51,65 +52,35 @@ class PmergeMe
 			
 		}
 
-		T	&makeJacobsthalArray(T &jacob_array)
-		{
-			for (size_t i = 2; jacobsthal(i) <= this->_a.size(); i++)
-			{
-				jacob_array.push_back(jacobsthal(i));
-			}
-			return (jacob_array);
-		}
-
 		size_t	jacobsthal(int n)
 		{
 			return ((pow(2, n) - pow(-1, n)) / 3);
 		}
-		void	binarySearch(int idx, std::vector<T> &tmp)
+
+		void	putArray(std::vector<T> &tmp, size_t idx)
 		{
-			int						left = 0;
-			int						mid = 0;
-			int						right = 0;
+			int									first = 0;
+			int									mid = 0;
+			int									end;
 			typename std::vector<T>::iterator	it;
 
 			it = std::find(tmp.begin(), tmp.end(), this->_a[idx]);
-			right = std::distance(tmp.begin(), it);
-			while (left < right)
+			end = std::distance(tmp.begin(), it);
+			while (first < end)
 			{
-				mid = left + ((right - left) / 2);
+				mid = first + ((end - first) / 2);
 				if (tmp[mid] < this->_b[idx])
-					left = mid + 1;
+					first = mid + 1;
 				else if (this->_b[idx] < tmp[mid])
-					right = mid;
+					end = mid;
 			}
-			if (right == left)
+			if (end == first)
 			{
 				tmp.insert(tmp.begin() + mid + 1, this->_b[idx]);
 			}
-			else if (right < left)
+			if (end < first)
 			{
 				tmp.insert(tmp.begin() + mid, this->_b[idx]);
-			}
-			
-		}
-
-		void	findArrayIdx(std::vector<T> &tmp)
-		{
-			size_t	i;
-			T		jacob_array;
-
-			i = 0;
-			tmp = this->_a;
-			jacob_array = makeJacobsthalArray(jacob_array);
-			while (i < jacob_array.size())
-			{
-				binarySearch(jacob_array[i] - 1, tmp);
-				i++;
-			}
-			int j = 0;
-			while (jacob_array[i - 1] < static_cast<int>(this->_a.size()) - j)
-			{
-				binarySearch(this->_a.size() - 1 - j, tmp);
-				j++;
 			}
 		}
 
@@ -123,27 +94,54 @@ class PmergeMe
 					this->_array.push_back(tmp[i][j]);
 				}
 			}
-			for (size_t i = 0; i < this->_remain.size(); i++)
-			{
-				tmp[tmp.size() - 1].push_back(this->_remain[i]);
-			}
-			std::cout << "Sorted array : ";
-			for (size_t i = 0; i < this->_array.size(); i++)
-			{
-				std::cout << this->_array[i] << " ";
-			}
-			std::cout << std::endl;
 			this->_a.clear();
 			this->_b.clear();
 			this->_remain.clear();
+			// this->_jacobs.clear();
+		}
+
+		void	getJacosArray()
+		{
+			int		j = 0;
+			size_t 	jacob_idx;
+
+			for (size_t i = 0; i < 65; i++)
+			{
+				jacob_idx = jacobsthal(i);
+				while (jacobsthal(i - 1) < jacob_idx)
+				{
+					while (this->_a.size() <= jacob_idx)
+					{
+						jacob_idx = this->_a.size();
+						this->_jacobs.push_back(jacob_idx - j);
+						if (jacobsthal(i - 1) + 1 == jacob_idx - j)
+							return ;
+						j++;
+					}
+					this->_jacobs.push_back(jacob_idx);
+					jacob_idx--;
+				}
+			}
 		}
 
 		void	mergeArray(void)
 		{
+			// size_t			i = 0;
 			std::vector<T>	tmp;
 
 			tmp = this->_a;
-			findArrayIdx(tmp);
+			getJacosArray();
+			std::cout << "jaco !! ";
+			for (size_t j = 0; j < this->_jacobs.size(); j++)
+			{
+				std::cout << this->_jacobs[j] << " ";
+			}
+			std::cout << std::endl;
+			// while (i < this->_jacobs.size())
+			// {
+			// 	putArray(tmp, this->_jacobs[i]);
+			// 	i++;
+			// }
 			rebuildSortedArray(tmp);
 		}
 
@@ -154,7 +152,7 @@ class PmergeMe
 			size_t		i = 0;
 
 			r_size = this->_n % fair_size;
-			while (i + fair_size <= this->_n)
+			while (i + fair_size < this->_n)
 			{
 				j = 0;
 				T	tmp;
@@ -212,12 +210,6 @@ class PmergeMe
 			if (this->_n / 2 < fair_size) // 탈출
 			{
 				this->makeArray(fair_size);
-				std::cout << "Sorted array : ";
-				for (size_t i = 0; i < this->_array.size(); i++)
-				{
-					std::cout << this->_array[i] << " ";
-				}
-				std::cout << std::endl;
 				mergeArray();
 				return ;
 			}
