@@ -1,13 +1,27 @@
-start array : 4 3 2 1 5 
+fair size : 4
+remain size : 1
+b2 : 
+remain :6 
+start array : 4 3 2 1 6 
 Jacobsthal array : 1 
-tmp 1: 4 3 
-tmp 2: 4 3 
-Jacobsthal 2 : 1 1
-left : 0 right : -1 mid : 0
-
+tmp 1: 2 1 4 3 
+tmp 2: 2 1 4 3 
+tmp 3: 2 1 4 3 
 Merged array : 2 1 4 3 
-Sorted array : 2 1 4 3 5 
+Sorted array : 2 1 4 3 6 
+
+fair size : 2
+remain size : 1
+b2 : 6 
+remain :
+start array : 2 1 4 3 6 
 Jacobsthal array : 1 
-tmp 1: 2 4 
-tmp 2: 2 4 
+tmp 1: 1 2 4 
+tmp 2: 1 2 4 
 Jacobsthal 2 : 1 3
+a : 2 b : 3
+idx : 2 left : 0 mid : 1 right : 3
+a : 2 b : 6
+idx : 2 left : 2 mid : 2 right : 3
+a : 4 b : 6
+idx : 2 left : 3 mid : 3 right : 3

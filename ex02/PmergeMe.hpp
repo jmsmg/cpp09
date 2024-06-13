@@ -51,6 +51,38 @@ class PmergeMe
 			
 		}
 
+		void	rebuildSortedArray(std::vector<T> &tmp)
+		{
+			this->_array.clear();
+			for (size_t i = 0; i < tmp.size(); i++)
+			{
+				for (size_t j = 0; j < tmp[i].size(); j++)
+				{
+					this->_array.push_back(tmp[i][j]);
+				}
+			}
+			std::cout << "Merged array : ";
+			for (size_t i = 0; i < this->_array.size(); i++)
+			{
+				std::cout << this->_array[i] << " ";
+			}
+			std::cout << std::endl;
+			for (size_t i = 0; i < this->_remain.size(); i++)
+			{
+				this->_array.push_back(this->_remain[i]);
+			}
+			std::cout << "Sorted array : ";
+			for (size_t i = 0; i < this->_array.size(); i++)
+			{
+				std::cout << this->_array[i] << " ";
+			}
+			std::cout << std::endl;
+			std::cout << std::endl;
+			this->_a.clear();
+			this->_b.clear();
+			this->_remain.clear();
+		}
+
 		T	&makeJacobsthalArray(T &jacob_array)
 		{
 			for (size_t i = 2; jacobsthal(i) <= this->_a.size(); i++)
@@ -73,12 +105,16 @@ class PmergeMe
 			typename std::vector<T>::iterator	it;
 
 			it = std::find(tmp.begin(), tmp.end(), this->_a[idx]);
+
+			// std::cout << this->_a[idx][0] << std::endl;
+			// std::cout << "it " << *it << std::endl;
 			right = std::distance(tmp.begin(), it);
 			while (left <= right)
 			{
 				mid = left + ((right - left) / 2);
-				// std::cout << "idx : " << idx << " mid : " << mid << " right : " << right << std::endl;
-				// std::cout << "a : " << tmp[mid][0] << " " << "b : "<< this->_b[idx][0] << std::endl;
+				std::cout << "idx : " << idx << " left : " << left << " mid : " << mid << " right : " << right << std::endl;
+				std::cout << "a : " << tmp[mid][0] << " ";
+				std::cout << "b : "<< this->_b[idx][0] << std::endl;
 				if (tmp[mid][0] < this->_b[idx][0])
 				{
 					left = mid + 1;
@@ -89,14 +125,23 @@ class PmergeMe
 				}
 			}
 			std::cout << "left : " << left << " right : " << right << " mid : " << mid << std::endl;
-			if (right == left)
-			{
-				tmp.insert(tmp.begin() + mid - 1, this->_b[idx]);
-			}
-			else if (right < left)
+			if (this->_b[idx][0] < tmp[mid][0])
 			{
 				tmp.insert(tmp.begin() + mid, this->_b[idx]);
-			}			
+			}
+			else if (this->_b[idx][0] > tmp[mid][0])
+			{
+				tmp.insert(tmp.begin() + mid + 1, this->_b[idx]);
+			}
+			std::cout << "binary : ";
+			for (size_t i = 0; i < tmp.size(); i++)
+			{
+				for (size_t j = 0; j < tmp[i].size(); j++)
+				{
+					std::cout << tmp[i][j] << " ";
+				}
+			}
+			std::cout << std::endl;
 		}
 
 		void	findArrayIdx(std::vector<T> &tmp)
@@ -141,51 +186,29 @@ class PmergeMe
 			}
 			std::cout << std::endl;
 			int j = 0;
-			while (jacob_array[i - 1] - 1 < static_cast<int>(this->_b.size()) - j)
+			while (jacob_array[i - 1] < static_cast<int>(this->_b.size()) - j)
 			{
 				std::cout << "Jacobsthal 2 : " << jacob_array[i - 1] << " " << this->_b.size() << std::endl;
+				std::cout << "a : " << this->_a.size() << " b : " << this->_b.size() << std::endl;
 				binarySearch(this->_b.size() - j - 1, tmp);
 				j++;
 			}
-			std::cout << std::endl;
-		}
-
-		void	rebuildSortedArray(std::vector<T> &tmp)
-		{
-			this->_array.clear();
+			std::cout << "tmp 3: ";
 			for (size_t i = 0; i < tmp.size(); i++)
 			{
 				for (size_t j = 0; j < tmp[i].size(); j++)
 				{
-					this->_array.push_back(tmp[i][j]);
+					std::cout << tmp[i][j] << " ";
 				}
 			}
-			std::cout << "Merged array : ";
-			for (size_t i = 0; i < this->_array.size(); i++)
-			{
-				std::cout << this->_array[i] << " ";
-			}
 			std::cout << std::endl;
-			for (size_t i = 0; i < this->_remain.size(); i++)
-			{
-				this->_array.push_back(this->_remain[i]);
-			}
-			std::cout << "Sorted array : ";
-			for (size_t i = 0; i < this->_array.size(); i++)
-			{
-				std::cout << this->_array[i] << " ";
-			}
-			std::cout << std::endl;
-			this->_a.clear();
-			this->_b.clear();
-			this->_remain.clear();
 		}
 
 		void	mergeArray(void)
 		{
 			std::vector<T>	tmp;
 
-			// tmp.push_back(this->_b[0]);
+			tmp.push_back(this->_b[0]);
 			for (size_t i = 0; i < this->_a.size(); i++)
 			{
 				tmp.push_back(this->_a[i]);
@@ -221,22 +244,29 @@ class PmergeMe
 				this->_b.push_back(tmpb);
 				i += fair_size;
 			}
+			std::cout << "remain size : " << r_size << std::endl;
 			if (r_size)
 			{
 				T	tmp;
 				j = 0;
-				while (j < fair_size / 2 && fair_size / 2 <= r_size)
+				std::cout << "b2 : ";
+				while (fair_size / 2 <= r_size && j < fair_size / 2) // fair_size 
 				{
 					tmp.push_back(this->_array[i + j]);
+					std::cout << this->_array[i + j]<< " ";
 					j++;
 				}
+				std::cout << std::endl;
 				if (j)
 					this->_b.push_back(tmp);
+				std::cout << "remain :";
 				while (i + j < this->_n)
 				{
+					std::cout << this->_array[i + j] << " ";
 					this->_remain.push_back(this->_array[i + j]);
 					j++;
 				}
+				std::cout << std::endl;
 			}
 		}
 
@@ -259,6 +289,7 @@ class PmergeMe
 			}
 			if (this->_n / 2 < fair_size) // 탈출
 			{
+				std::cout << "fair size : " << fair_size << std::endl;
 				this->makeArray(fair_size);
 				std::cout << "start array : ";
 				for (size_t i = 0; i < this->_array.size(); i++)
@@ -271,7 +302,14 @@ class PmergeMe
 			}
 
 			fordJohnson(depth + 1, fair_size * 2);
+			std::cout << "fair size : " << fair_size << std::endl;
 			makeArray(fair_size);
+			std::cout << "start array : ";
+			for (size_t i = 0; i < this->_array.size(); i++)
+			{
+				std::cout << this->_array[i] << " ";
+			}
+			std::cout << std::endl;
 			mergeArray();
 		}
 
