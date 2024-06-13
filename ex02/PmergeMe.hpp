@@ -84,10 +84,18 @@ class PmergeMe
 			if (right == left)
 			{
 				tmp.insert(tmp.begin() + mid + 1, this->_b[idx]);
+				for (size_t i = 0; i < this->_b[idx].size(); i++)
+				{
+					std::cout << "Insert " << this->_b[idx][i] << " at " << mid + 1 << std::endl;
+				}
 			}
 			else if (right < left)
 			{
 				tmp.insert(tmp.begin() + mid, this->_b[idx]);
+				for (size_t i = 0; i < this->_b[idx].size(); i++)
+				{
+					std::cout << "Insert " << this->_b[idx][i] << " at " << mid + 1 << std::endl;
+				}
 			}
 			
 		}
@@ -123,9 +131,15 @@ class PmergeMe
 					this->_array.push_back(tmp[i][j]);
 				}
 			}
+			std::cout << "Merged array : ";
+			for (size_t i = 0; i < this->_array.size(); i++)
+			{
+				std::cout << this->_array[i] << " ";
+			}
+			std::cout << std::endl;
 			for (size_t i = 0; i < this->_remain.size(); i++)
 			{
-				tmp[tmp.size() - 1].push_back(this->_remain[i]);
+				this->_array.push_back(this->_remain[i]);
 			}
 			std::cout << "Sorted array : ";
 			for (size_t i = 0; i < this->_array.size(); i++)
@@ -212,7 +226,7 @@ class PmergeMe
 			if (this->_n / 2 < fair_size) // 탈출
 			{
 				this->makeArray(fair_size);
-				std::cout << "Sorted array : ";
+				std::cout << "start array : ";
 				for (size_t i = 0; i < this->_array.size(); i++)
 				{
 					std::cout << this->_array[i] << " ";
