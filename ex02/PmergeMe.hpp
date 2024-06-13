@@ -97,41 +97,47 @@ class PmergeMe
 			return ((pow(2, n) - pow(-1, n)) / 3);
 		}
 
-		void	binarySearch(int idx, std::vector<T> &tmp)
+		void	binarySearch(int idxa, std::vector<T> &tmp, int idxb)
 		{
 			int						left = 0;
 			int						mid = 0;
 			int						right = 0;
 			typename std::vector<T>::iterator	it;
 
-			it = std::find(tmp.begin(), tmp.end(), this->_a[idx]);
+			std::cout << "idx : " << idxa << std::endl;
+			it = std::find(tmp.begin(), tmp.end(), this->_a[idxa]);
 
-			// std::cout << this->_a[idx][0] << std::endl;
+			std::cout << this->_a[idxa][0] << std::endl;
 			// std::cout << "it " << *it << std::endl;
 			right = std::distance(tmp.begin(), it);
 			while (left <= right)
 			{
 				mid = left + ((right - left) / 2);
-				std::cout << "idx : " << idx << " left : " << left << " mid : " << mid << " right : " << right << std::endl;
+				std::cout << "idxa : " << idxa << " left : " << left << " mid : " << mid << " right : " << right << std::endl;
 				std::cout << "a : " << tmp[mid][0] << " ";
-				std::cout << "b : "<< this->_b[idx][0] << std::endl;
-				if (tmp[mid][0] < this->_b[idx][0])
+				std::cout << "b : "<< this->_b[idxb][0] << std::endl;
+				if (tmp[mid][0] < this->_b[idxb][0])
 				{
 					left = mid + 1;
 				}
-				else if (this->_b[idx][0] < tmp[mid][0])
+				else if (this->_b[idxb][0] < tmp[mid][0])
 				{
 					right = mid - 1;
 				}
 			}
 			std::cout << "left : " << left << " right : " << right << " mid : " << mid << std::endl;
-			if (this->_b[idx][0] < tmp[mid][0])
+			std::cout << "tmp size == "<< tmp.size() << std::endl;
+			if (this->_b[idxb][0] < tmp[mid][0])
 			{
-				tmp.insert(tmp.begin() + mid, this->_b[idx]);
+				tmp.insert(tmp.begin() + mid, this->_b[idxb]);
 			}
-			else if (this->_b[idx][0] > tmp[mid][0])
+			else if (this->_b[idxb][0] > tmp[mid][0])
 			{
-				tmp.insert(tmp.begin() + mid + 1, this->_b[idx]);
+				tmp.insert(tmp.begin() + mid + 1, this->_b[idxb]);
+			}
+			else 
+			{
+				tmp.push_back(this->_b[idxb + 1]);
 			}
 			std::cout << "binary : ";
 			for (size_t i = 0; i < tmp.size(); i++)
@@ -171,12 +177,13 @@ class PmergeMe
 				while (jacob_array[i - 1] < jacob_array[i] - j)
 				{
 					std::cout << "Jacobsthal 1 : " << jacob_array[i] - j << std::endl;
-					binarySearch(jacob_array[i] - j - 1, tmp);
+					binarySearch(jacob_array[i] - j - 1, tmp, jacob_array[i] - j - 1);
 					j++;
 				}
 				i++;
 			}
-			std::cout << "tmp 2: ";
+			int j = 0;
+			std::cout << "tmp 2 : ";
 			for (size_t i = 0; i < tmp.size(); i++)
 			{
 				for (size_t j = 0; j < tmp[i].size(); j++)
@@ -185,12 +192,11 @@ class PmergeMe
 				}
 			}
 			std::cout << std::endl;
-			int j = 0;
 			while (jacob_array[i - 1] < static_cast<int>(this->_b.size()) - j)
 			{
 				std::cout << "Jacobsthal 2 : " << jacob_array[i - 1] << " " << this->_b.size() << std::endl;
 				std::cout << "a : " << this->_a.size() << " b : " << this->_b.size() << std::endl;
-				binarySearch(this->_b.size() - j - 1, tmp);
+				binarySearch(this->_a.size() - 1, tmp, this->_b.size() - j - 1);
 				j++;
 			}
 			std::cout << "tmp 3: ";
