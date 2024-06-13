@@ -19,6 +19,7 @@ class PmergeMe
 		size_t							_n;
 		T								_array;
 		std::vector<int>				_remain;
+		std::vector<int>				_jacobs;
 		std::vector<T>	_a;
 		std::vector<T>	_b;
 
@@ -96,32 +97,51 @@ class PmergeMe
 			this->_a.clear();
 			this->_b.clear();
 			this->_remain.clear();
+			this->_jacobs.clear();
 		}
 
-		size_t	getJacosIdx()
+		void	getJacosArray()
 		{
-			size_t	jacob_idx;
+			int		j = 0;
+			size_t 	jacob_idx;
 
-			while (true)
+			for (size_t i = 0; i < 65; i++)
 			{
 				jacob_idx = jacobsthal(i);
 				while (jacobsthal(i - 1) < jacob_idx)
 				{
-
+					while (this->_a.size() <= jacob_idx)
+					{
+						jacob_idx = this->_a.size();
+						this->_jacobs.push_back(jacob_idx - j);
+						if (jacobsthal(i - 1) + 1 == jacob_idx - j)
+							return ;
+						j++;
+					}
+					this->_jacobs.push_back(jacob_idx);
 					jacob_idx--;
 				}
-				i++;
 			}
 		}
+
 		void	mergeArray(void)
 		{
-			int				i = 0;
-			int				flag = 1;
+			// size_t			i = 0;
 			std::vector<T>	tmp;
 
 			tmp = this->_a;
-			getJacosIdx();
-
+			getJacosArray();
+			std::cout << "jaco !! ";
+			for (size_t j = 0; j < this->_jacobs.size(); j++)
+			{
+				std::cout << this->_jacobs[j] << " ";
+			}
+			std::cout << std::endl;
+			// while (i < this->_jacobs.size())
+			// {
+			// 	putArray(tmp, this->_jacobs[i]);
+			// 	i++;
+			// }
 			rebuildSortedArray(tmp);
 		}
 
