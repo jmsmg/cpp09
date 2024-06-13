@@ -1,5 +1,5 @@
-CC = g++
-FLAG = -Wall -Wextra -Werror -std=c++98 -g
+CC = c++
+FLAG = -Wall -Wextra -Werror -std=c++98
 NAME = RPN
 OBJS = $(SRCS:.cpp=.o)
 SRCS = main.cpp RPN.cpp
