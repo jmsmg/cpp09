@@ -218,7 +218,7 @@ class PmergeMe
 					std::rotate(a, b, last);
 				idx++;
 			}
-			if (this->_n / 2 < fair_size) // 탈출
+			if (this->_n / 2 < fair_size) 
 			{
 				this->makeArray(fair_size);
 				mergeArray();
@@ -268,8 +268,5 @@ class PmergeMe
 		{
 			return (this->_array);
 		}
-
-		void				setN(size_t n);
-		void				setArray(T array);
 };
 #endif
