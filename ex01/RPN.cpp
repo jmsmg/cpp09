@@ -26,23 +26,33 @@ RPN::~RPN()
 
 int	RPN::basicOperation(int first, int second, char oper)
 {
-	// std::cout << first << std::endl;
-	// std::cout << second << std::endl;
-	// std::cout << oper << std::endl;
-	// std::cout << std::endl;
+	long long	result;
+
+	result = 0;
 	if (oper == '+')
 	{
-		return (first + second);
+		result = first + second;
 	}
-	if (oper == '-')
+	else if (oper == '-')
 	{
-		return (first - second);
+		result = first - second;
 	}
-	if (oper == '/')
+	else if (oper == '/')
 	{
-		return (first / second);
+		if (second == 0)
+		{
+			throw (std::invalid_argument("Error: Division by zero."));
+		}
+		result = first / second;
 	}
-	return (first * second);
+	else if (oper == '*')
+	{
+		result = first * second;
+	}
+
+	if (result < -2147483648 || 2147483647 < result)
+		throw (std::invalid_argument("Error: Overflow."));
+	return (result);
 }
 
 void	RPN::calculator(char charactor)
@@ -94,5 +104,7 @@ void	RPN::process(char *input)
 		if (i % 2 == 0)
 			this->calculator(input[i]);
 	}
+	if (this->_stack.size() != 1)
+		throw (std::invalid_argument("Error: Invalid Reverse Polish Notation format."));
 	std::cout << this->_stack.top() << std::endl;
 }

@@ -23,9 +23,6 @@ class	BitcoinExchange
 		BitcoinExchange	&operator=(const BitcoinExchange &obj);
 		~BitcoinExchange();
 
-		std::map<std::string, int> getData(void);
-		std::map<std::string, int> getInput(void);
-
 		time_t	transUnixTime(std::string str);
 		bool	checkDate(std::string buff);
 		double	findDate(std::string buff);

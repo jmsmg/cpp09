@@ -41,7 +41,7 @@ time_t	BitcoinExchange::transUnixTime(std::string str)
 	cur->tm_year = atof(str.c_str());
 
 	std::getline(is, str, '-');
-	cur->tm_mon = atof(str.c_str());
+	cur->tm_mon = atof(str.c_str()) - 1;
 
 	std::getline(is, str, '-');
 	cur->tm_mday = atof(str.c_str());
@@ -54,42 +54,47 @@ double	BitcoinExchange::findDate(std::string buff)
 {
 	time_t	input = this->transUnixTime(buff);
 	time_t	curr = 0;
-	time_t	tmp = 0;
 	double	value = 0;
+	std::string	last;
+	std::map<std::string, double>::iterator	it = this->_data->begin();
 
-	for (std::map<std::string, double>::iterator it = this->_data->begin(); it != this->_data->end(); it++)
+	if (input < this->transUnixTime(this->_data->begin()->first))
+	{
+		throw (std::runtime_error("Error: bad input => "));
+	}
+	while (it != this->_data->end())
 	{
 		curr = this->transUnixTime(it->first);
-		if (tmp < curr && curr <= input)
-		{
-			tmp = curr;
+		if (curr <= input)
 			value = it->second;
-		}
+		if (input < curr)
+			return (value);
+		it++;
 	}
+	--it;
+	value = it->second;
 	return (value);
 }
 
 bool	BitcoinExchange::checkDate(std::string buff)
 {
-	time_t		raw = this->transUnixTime(buff);
-	struct tm	*after = localtime(&raw);
-	std::istringstream is(buff);
+	time_t				raw = this->transUnixTime(buff);
+	struct tm			*after = localtime(&raw);
+	std::istringstream	is(buff);
+	std::map<std::string, double>::iterator	it;
 
 	std::getline(is, buff, '-');
 	if (after->tm_year != atof(buff.c_str()))
-	{
 		return (true);
-	}
 	std::getline(is, buff, '-');
-	if (after->tm_mon != atof(buff.c_str()))
+	if (after->tm_mon != atof(buff.c_str()) - 1)
 	{
 		return (true);
 	}
 	std::getline(is, buff, '-');
 	if (after->tm_mday != atof(buff.c_str()))
-	{
 		return (true);
-	}
+
 	return (false);
 }
 
@@ -171,6 +176,11 @@ std::map<std::string, double>	*makeMap(std::ifstream	&data, char delemeter)
 	std::string value;
 	std::map<std::string, double>	*map = new std::map<std::string, double>;
 
+	std::getline(data, line);
+	if (line != "date,exchange_rate")
+	{
+		throw (std::invalid_argument("Error: data file error"));
+	}
 	while (std::getline(data, line))
 	{
 		std::istringstream is(line);

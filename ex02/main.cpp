@@ -6,9 +6,9 @@ int	main(int argc, char *argv[])
 	{
 		PmergeMe<std::vector<int> > a;
 
+		a.inputArguments(argc, argv);
 
 		std::cout << "Before :   ";
-		a.inputArguments(argc, argv);
 		for (size_t i = 0; i < a.getArray().size(); i++)
 		{
 			std::cout << a.getArray()[i] << " ";

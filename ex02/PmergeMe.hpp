@@ -116,10 +116,6 @@ class PmergeMe
 			{
 				tmp.insert(tmp.begin() + mid + 1, this->_b[idxb]);
 			}
-			else 
-			{
-				tmp.push_back(this->_b[idxb + 1]);
-			}
 		}
 
 		void	findArrayIdx(std::vector<T> &tmp)
@@ -190,7 +186,7 @@ class PmergeMe
 			{
 				T	tmp;
 				j = 0;
-				while (fair_size / 2 <= r_size && j < fair_size / 2) // fair_size 
+				while (fair_size / 2 <= r_size && j < fair_size / 2) 
 				{
 					tmp.push_back(this->_array[i + j]);
 					j++;
@@ -207,7 +203,7 @@ class PmergeMe
 
 		void	fordJohnson(int depth, size_t fair_size)
 		{
-			if (this->_array.size() == 0 || this->_array.size() == 1) // 에러처리
+			if (this->_array.size() == 0 || this->_array.size() == 1) 
 			{
 				throw (std::runtime_error("Error : invalid array size"));
 			}
